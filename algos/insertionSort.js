@@ -9,7 +9,7 @@
 //step five: [2,4,5,6,(8),14,1,3] -> [2,4,5,6,(8),14,1,3]
 //and so on...
 const insertionSort = (arr) => {
-	//loop through comparing runner to i
+	//loop through comparing cursor to i
 	for(i=1; i<arr.length; i++){
 		let c = i-1;
 		const num = arr[i];
