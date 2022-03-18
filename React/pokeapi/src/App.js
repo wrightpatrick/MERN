@@ -22,10 +22,11 @@ function App() {
 		// 	//promises exist in 3 states: working, resolved, or rejected. errors get caught here and logged.
 		// 	.catch(err => console.log(err))
     
-    useEffect(()=>{
-        axios.get('https://pokeapi.co/api/v2/pokemon/?limit=800')
-          .then(response=>{setResponseData(response.data)})
-    }, []); 
+      useEffect(()=>{
+          axios.get('https://pokeapi.co/api/v2/pokemon/?limit=800')
+            .then(response=>{setResponseData(response.data)})
+            .then(res => res.json())
+      }, []); 
     return(
         <div>
             {responseData}
