@@ -14,14 +14,15 @@ module.exports.findAllPeople = (req, res) => {
 }
  
 module.exports.findOneSinglePerson = (req, res) => {
-    Person.findOne({ _id: req.params.id })
+    console.log({ _id: req.params._id });
+    Person.findOne({ _id: req.params._id })
         .then(oneSinglePerson => res.json({ person: oneSinglePerson }))
         .catch(err => res.json({ message: 'Something went wrong', error: err }));
 }
 
 module.exports.updateExistingPerson = (req, res) => {
     Person.findOneAndUpdate(
-        { _id: req.params.id },
+        { _id: req.params._id },
         req.body,
         { new: true, runValidators: true }
     )
@@ -30,7 +31,7 @@ module.exports.updateExistingPerson = (req, res) => {
 }
  
 module.exports.deleteAnExistingPerson = (req, res) => {
-    Person.deleteOne({ _id: req.params.id })
+    Person.deleteOne({ _id: req.params._id })
         .then(result => res.json({ result: result }))
         .catch(err => res.json({ message: 'Something went wrong', error: err }));
 }
