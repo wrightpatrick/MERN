@@ -1,41 +1,48 @@
-import React, { useState } from 'react'
+import React, { useState, useEffect } from 'react';
 import axios from 'axios';
-import { useHistory } from 'react-router-dom';
+import { useParams, useHistory } from 'react-router-dom';
 
-const UpdatePerson = () => {
-    //keep track of what is being typed via useState hook
-    const [form, setForm] = useState({});
+const Update = (props) => {
+    const [firstName, setFirstName] = useState('');
+    const [lastName, setLastName] = useState('');
     const { _id } = useParams();
+    const history = useHistory();
 
-    //handler when the form is submitted
-    const onUpdateHandler = e => {
-        //prevent default behavior of the submit
-        e.preventDefault();
-        //make a post request to create a new person
-        axios.patch(`/api/person/${_id}/update`, {
-            ...form
-        })
-        .then(res=>{console.log(res);
-            history.push('/api/person/people');
-        })
-        .catch(err=>console.log(err))
+    useEffect(() => {
+        axios.get('http://localhost:8000/api/person/'+ _id)
+            .then(res => {
+                setFirstName(res.data.person.firstName);
+                setLastName(res.data.person.lastName);
+            })
+            .catch(err=> console.log(err))
+    },[_id]);
+    
+    const onSubmitHandler = (event) => {
+        event.preventDefault();
+        axios.patch(`http://localhost:8000/api/person/${_id}/update`,{
+                firstName,
+                lastName
+            })
+            .catch(err => console.log(err.response.data.err.errors));
+            history.push('/api/people')
     }
-    //onChange to update firstName and lastName
-    return (
-        <div className='form'>
-            <form onSubmit={onUpdateHandler}>
-                <div className='form-label'>
-                    <label className='form-control' htmlFor='firstName'>First Name</label>
-                    <input value={form.firstName} className='form-control' name='firstName' type="text" onChange={(e)=>setFirstName(e.target.value)}/>
+
+    return(
+        <div>
+            <h1 className='display-2'>Edit Person</h1>
+            <form className='w-75 mx-auto' onSubmit={onSubmitHandler}>
+                <div className='form-group'>
+                    <label htmlFor='firstName'>First Name:</label>
+                    <input value={firstName} onChange={(event)=>{setFirstName(event.target.value)}} type='text' name='firstName' className='form-control'/>
                 </div>
-                <div className='form-label'>
-                    <label className='form-control' htmlFor='lastName'>Last Name</label>
-                    <input value={lastName} className='form-control' name='lastName' type="text" onChange={(e)=>setLastName(e.target.value)}/>
+                <div className='form-group'>
+                    <label htmlFor='lastName'>Last Name:</label>
+                    <input value={lastName} type='text' name='lastName' onChange={(event)=>{setLastName(event.target.value)}} className='form-control'/>
                 </div>
-                <input className='btn btn-outline-primary mt-2' type="submit"/>
+                <input type='submit' className='btn btn-outline-success mt-2'/>
             </form>
         </div>
-    )
+)
 }
 
-export default UpdatePerson;
+export default Update;
